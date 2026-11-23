@@ -1,0 +1,998 @@
+{
+  "generated_at": "2026-11-22T20:02:15.288054+00:00",
+  "test_from": "2023-07-01",
+  "leagues": {
+    "pl": {
+      "xi=0.0019,blend=0.0": {
+        "matches": 1240,
+        "model_1x2": {
+          "logloss": 0.9831,
+          "brier": 0.5852,
+          "ece": 0.0155,
+          "top_pick_hit_rate": 0.529
+        },
+        "calibration_1x2": [
+          {
+            "bin": "0.0-0.1",
+            "n": 110,
+            "predicted": 0.071,
+            "observed": 0.064
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 559,
+            "predicted": 0.16,
+            "observed": 0.15
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 1407,
+            "predicted": 0.248,
+            "observed": 0.264
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 571,
+            "predicted": 0.348,
+            "observed": 0.335
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 430,
+            "predicted": 0.448,
+            "observed": 0.428
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 293,
+            "predicted": 0.545,
+            "observed": 0.526
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 219,
+            "predicted": 0.647,
+            "observed": 0.658
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 93,
+            "predicted": 0.751,
+            "observed": 0.742
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 33,
+            "predicted": 0.838,
+            "observed": 0.909
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 5,
+            "predicted": 0.919,
+            "observed": 1.0
+          }
+        ],
+        "market_1x2_closing": {
+          "matches": 1240,
+          "logloss": 0.9639,
+          "brier": 0.5727,
+          "model_logloss_same_matches": 0.9831,
+          "top_pick_hit_rate": 0.5444
+        },
+        "model_ou25": {
+          "logloss": 0.6843,
+          "brier": 0.4907,
+          "ece": 0.0408
+        },
+        "market_ou25_closing": {
+          "logloss": 0.6707,
+          "model_logloss_same_matches": 0.6843
+        },
+        "model_btts": {
+          "logloss": 0.6872,
+          "baseline_logloss": 0.6816,
+          "ece": 0.0152
+        },
+        "correct_score": {
+          "hit_rate": 0.1145,
+          "mean_predicted_probability": 0.1181
+        },
+        "value_bets_pre_match_avg_odds": [
+          {
+            "edge_min": 0.03,
+            "bets": 1010,
+            "wins": 355,
+            "roi": -0.09,
+            "roi_95_halfwidth": 0.0762
+          },
+          {
+            "edge_min": 0.05,
+            "bets": 908,
+            "wins": 312,
+            "roi": -0.0902,
+            "roi_95_halfwidth": 0.0818
+          },
+          {
+            "edge_min": 0.08,
+            "bets": 796,
+            "wins": 257,
+            "roi": -0.1143,
+            "roi_95_halfwidth": 0.0891
+          },
+          {
+            "edge_min": 0.1,
+            "bets": 714,
+            "wins": 217,
+            "roi": -0.1527,
+            "roi_95_halfwidth": 0.0941
+          }
+        ]
+      },
+      "xi=0.0019,blend=0.7": {
+        "matches": 1240,
+        "model_1x2": {
+          "logloss": 0.9701,
+          "brier": 0.5769,
+          "ece": 0.0119,
+          "top_pick_hit_rate": 0.5387
+        },
+        "calibration_1x2": [
+          {
+            "bin": "0.0-0.1",
+            "n": 99,
+            "predicted": 0.071,
+            "observed": 0.04
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 579,
+            "predicted": 0.159,
+            "observed": 0.154
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 1430,
+            "predicted": 0.245,
+            "observed": 0.255
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 519,
+            "predicted": 0.349,
+            "observed": 0.345
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 416,
+            "predicted": 0.446,
+            "observed": 0.413
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 328,
+            "predicted": 0.548,
+            "observed": 0.552
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 204,
+            "predicted": 0.648,
+            "observed": 0.652
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 105,
+            "predicted": 0.743,
+            "observed": 0.752
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 39,
+            "predicted": 0.835,
+            "observed": 0.949
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 1,
+            "predicted": 0.909,
+            "observed": 1.0
+          }
+        ],
+        "market_1x2_closing": {
+          "matches": 1240,
+          "logloss": 0.9639,
+          "brier": 0.5727,
+          "model_logloss_same_matches": 0.9701,
+          "top_pick_hit_rate": 0.5444
+        },
+        "model_ou25": {
+          "logloss": 0.6742,
+          "brier": 0.4814,
+          "ece": 0.014
+        },
+        "market_ou25_closing": {
+          "logloss": 0.6707,
+          "model_logloss_same_matches": 0.6742
+        },
+        "model_btts": {
+          "logloss": 0.6811,
+          "baseline_logloss": 0.6816,
+          "ece": 0.013
+        },
+        "correct_score": {
+          "hit_rate": 0.1266,
+          "mean_predicted_probability": 0.1148
+        },
+        "value_bets_pre_match_avg_odds": [
+          {
+            "edge_min": 0.03,
+            "bets": 412,
+            "wins": 116,
+            "roi": -0.1323,
+            "roi_95_halfwidth": 0.1338
+          },
+          {
+            "edge_min": 0.05,
+            "bets": 256,
+            "wins": 70,
+            "roi": -0.0918,
+            "roi_95_halfwidth": 0.1813
+          },
+          {
+            "edge_min": 0.08,
+            "bets": 121,
+            "wins": 32,
+            "roi": -0.0455,
+            "roi_95_halfwidth": 0.2836
+          },
+          {
+            "edge_min": 0.1,
+            "bets": 80,
+            "wins": 20,
+            "roi": -0.0659,
+            "roi_95_halfwidth": 0.3545
+          }
+        ]
+      }
+    },
+    "liga": {
+      "xi=0.0019,blend=0.0": {
+        "matches": 1259,
+        "model_1x2": {
+          "logloss": 0.969,
+          "brier": 0.5756,
+          "ece": 0.0179,
+          "top_pick_hit_rate": 0.5346
+        },
+        "calibration_1x2": [
+          {
+            "bin": "0.0-0.1",
+            "n": 115,
+            "predicted": 0.076,
+            "observed": 0.035
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 500,
+            "predicted": 0.159,
+            "observed": 0.14
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 1391,
+            "predicted": 0.253,
+            "observed": 0.263
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 719,
+            "predicted": 0.34,
+            "observed": 0.314
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 465,
+            "predicted": 0.446,
+            "observed": 0.445
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 288,
+            "predicted": 0.547,
+            "observed": 0.545
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 168,
+            "predicted": 0.642,
+            "observed": 0.69
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 99,
+            "predicted": 0.747,
+            "observed": 0.848
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 31,
+            "predicted": 0.835,
+            "observed": 0.903
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 1,
+            "predicted": 0.909,
+            "observed": 1.0
+          }
+        ],
+        "market_1x2_closing": {
+          "matches": 1259,
+          "logloss": 0.9492,
+          "brier": 0.5623,
+          "model_logloss_same_matches": 0.969,
+          "top_pick_hit_rate": 0.5536
+        },
+        "model_ou25": {
+          "logloss": 0.6717,
+          "brier": 0.4789,
+          "ece": 0.0281
+        },
+        "market_ou25_closing": {
+          "logloss": 0.6591,
+          "model_logloss_same_matches": 0.6717
+        },
+        "model_btts": {
+          "logloss": 0.6924,
+          "baseline_logloss": 0.6905,
+          "ece": 0.0394
+        },
+        "correct_score": {
+          "hit_rate": 0.1438,
+          "mean_predicted_probability": 0.1339
+        },
+        "value_bets_pre_match_avg_odds": [
+          {
+            "edge_min": 0.03,
+            "bets": 1004,
+            "wins": 383,
+            "roi": -0.108,
+            "roi_95_halfwidth": 0.0703
+          },
+          {
+            "edge_min": 0.05,
+            "bets": 899,
+            "wins": 334,
+            "roi": -0.118,
+            "roi_95_halfwidth": 0.075
+          },
+          {
+            "edge_min": 0.08,
+            "bets": 726,
+            "wins": 257,
+            "roi": -0.1348,
+            "roi_95_halfwidth": 0.085
+          },
+          {
+            "edge_min": 0.1,
+            "bets": 625,
+            "wins": 214,
+            "roi": -0.1367,
+            "roi_95_halfwidth": 0.0938
+          }
+        ]
+      },
+      "xi=0.0019,blend=0.7": {
+        "matches": 1259,
+        "model_1x2": {
+          "logloss": 0.9562,
+          "brier": 0.5666,
+          "ece": 0.0244,
+          "top_pick_hit_rate": 0.5457
+        },
+        "calibration_1x2": [
+          {
+            "bin": "0.0-0.1",
+            "n": 102,
+            "predicted": 0.078,
+            "observed": 0.039
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 496,
+            "predicted": 0.159,
+            "observed": 0.105
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 1473,
+            "predicted": 0.255,
+            "observed": 0.261
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 652,
+            "predicted": 0.342,
+            "observed": 0.319
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 456,
+            "predicted": 0.444,
+            "observed": 0.465
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 317,
+            "predicted": 0.547,
+            "observed": 0.549
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 145,
+            "predicted": 0.643,
+            "observed": 0.717
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 112,
+            "predicted": 0.748,
+            "observed": 0.875
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 24,
+            "predicted": 0.836,
+            "observed": 0.917
+          }
+        ],
+        "market_1x2_closing": {
+          "matches": 1259,
+          "logloss": 0.9492,
+          "brier": 0.5623,
+          "model_logloss_same_matches": 0.9562,
+          "top_pick_hit_rate": 0.5536
+        },
+        "model_ou25": {
+          "logloss": 0.6618,
+          "brier": 0.4695,
+          "ece": 0.0135
+        },
+        "market_ou25_closing": {
+          "logloss": 0.6591,
+          "model_logloss_same_matches": 0.6618
+        },
+        "model_btts": {
+          "logloss": 0.6838,
+          "baseline_logloss": 0.6905,
+          "ece": 0.0127
+        },
+        "correct_score": {
+          "hit_rate": 0.1628,
+          "mean_predicted_probability": 0.1286
+        },
+        "value_bets_pre_match_avg_odds": [
+          {
+            "edge_min": 0.03,
+            "bets": 310,
+            "wins": 86,
+            "roi": -0.2313,
+            "roi_95_halfwidth": 0.1381
+          },
+          {
+            "edge_min": 0.05,
+            "bets": 179,
+            "wins": 51,
+            "roi": -0.1269,
+            "roi_95_halfwidth": 0.2026
+          },
+          {
+            "edge_min": 0.08,
+            "bets": 80,
+            "wins": 20,
+            "roi": -0.1617,
+            "roi_95_halfwidth": 0.3182
+          },
+          {
+            "edge_min": 0.1,
+            "bets": 45,
+            "wins": 10,
+            "roi": -0.2356,
+            "roi_95_halfwidth": 0.4179
+          }
+        ]
+      }
+    },
+    "seriea": {
+      "xi=0.0019,blend=0.0": {
+        "matches": 1250,
+        "model_1x2": {
+          "logloss": 0.979,
+          "brier": 0.5837,
+          "ece": 0.0209,
+          "top_pick_hit_rate": 0.5344
+        },
+        "calibration_1x2": [
+          {
+            "bin": "0.0-0.1",
+            "n": 82,
+            "predicted": 0.077,
+            "observed": 0.073
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 527,
+            "predicted": 0.158,
+            "observed": 0.135
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 1441,
+            "predicted": 0.255,
+            "observed": 0.261
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 674,
+            "predicted": 0.341,
+            "observed": 0.306
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 391,
+            "predicted": 0.451,
+            "observed": 0.483
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 334,
+            "predicted": 0.546,
+            "observed": 0.575
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 199,
+            "predicted": 0.641,
+            "observed": 0.683
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 85,
+            "predicted": 0.737,
+            "observed": 0.706
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 17,
+            "predicted": 0.828,
+            "observed": 0.824
+          }
+        ],
+        "market_1x2_closing": {
+          "matches": 1250,
+          "logloss": 0.9604,
+          "brier": 0.5713,
+          "model_logloss_same_matches": 0.979,
+          "top_pick_hit_rate": 0.5528
+        },
+        "model_ou25": {
+          "logloss": 0.6946,
+          "brier": 0.501,
+          "ece": 0.0489
+        },
+        "market_ou25_closing": {
+          "logloss": 0.6837,
+          "model_logloss_same_matches": 0.6946
+        },
+        "model_btts": {
+          "logloss": 0.6955,
+          "baseline_logloss": 0.6931,
+          "ece": 0.031
+        },
+        "correct_score": {
+          "hit_rate": 0.1408,
+          "mean_predicted_probability": 0.1331
+        },
+        "value_bets_pre_match_avg_odds": [
+          {
+            "edge_min": 0.03,
+            "bets": 979,
+            "wins": 373,
+            "roi": -0.0816,
+            "roi_95_halfwidth": 0.0733
+          },
+          {
+            "edge_min": 0.05,
+            "bets": 854,
+            "wins": 306,
+            "roi": -0.1054,
+            "roi_95_halfwidth": 0.0803
+          },
+          {
+            "edge_min": 0.08,
+            "bets": 675,
+            "wins": 227,
+            "roi": -0.1388,
+            "roi_95_halfwidth": 0.0913
+          },
+          {
+            "edge_min": 0.1,
+            "bets": 566,
+            "wins": 186,
+            "roi": -0.1269,
+            "roi_95_halfwidth": 0.1028
+          }
+        ]
+      },
+      "xi=0.0019,blend=0.7": {
+        "matches": 1250,
+        "model_1x2": {
+          "logloss": 0.9642,
+          "brier": 0.5735,
+          "ece": 0.0253,
+          "top_pick_hit_rate": 0.548
+        },
+        "calibration_1x2": [
+          {
+            "bin": "0.0-0.1",
+            "n": 75,
+            "predicted": 0.08,
+            "observed": 0.027
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 532,
+            "predicted": 0.158,
+            "observed": 0.139
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 1502,
+            "predicted": 0.257,
+            "observed": 0.249
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 591,
+            "predicted": 0.34,
+            "observed": 0.308
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 422,
+            "predicted": 0.446,
+            "observed": 0.498
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 321,
+            "predicted": 0.548,
+            "observed": 0.583
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 216,
+            "predicted": 0.649,
+            "observed": 0.69
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 78,
+            "predicted": 0.736,
+            "observed": 0.808
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 13,
+            "predicted": 0.818,
+            "observed": 0.692
+          }
+        ],
+        "market_1x2_closing": {
+          "matches": 1250,
+          "logloss": 0.9604,
+          "brier": 0.5713,
+          "model_logloss_same_matches": 0.9642,
+          "top_pick_hit_rate": 0.5528
+        },
+        "model_ou25": {
+          "logloss": 0.6868,
+          "brier": 0.4936,
+          "ece": 0.0187
+        },
+        "market_ou25_closing": {
+          "logloss": 0.6837,
+          "model_logloss_same_matches": 0.6868
+        },
+        "model_btts": {
+          "logloss": 0.6911,
+          "baseline_logloss": 0.6931,
+          "ece": 0.0087
+        },
+        "correct_score": {
+          "hit_rate": 0.1488,
+          "mean_predicted_probability": 0.1302
+        },
+        "value_bets_pre_match_avg_odds": [
+          {
+            "edge_min": 0.03,
+            "bets": 214,
+            "wins": 51,
+            "roi": -0.2991,
+            "roi_95_halfwidth": 0.1679
+          },
+          {
+            "edge_min": 0.05,
+            "bets": 113,
+            "wins": 24,
+            "roi": -0.349,
+            "roi_95_halfwidth": 0.2311
+          },
+          {
+            "edge_min": 0.08,
+            "bets": 52,
+            "wins": 5,
+            "roi": -0.6837,
+            "roi_95_halfwidth": 0.2636
+          },
+          {
+            "edge_min": 0.1,
+            "bets": 33,
+            "wins": 3,
+            "roi": -0.7436,
+            "roi_95_halfwidth": 0.2766
+          }
+        ]
+      }
+    },
+    "l1": {
+      "xi=0.0019,blend=0.0": {
+        "matches": 1008,
+        "model_1x2": {
+          "logloss": 1.003,
+          "brier": 0.5996,
+          "ece": 0.0107,
+          "top_pick_hit_rate": 0.5248
+        },
+        "calibration_1x2": [
+          {
+            "bin": "0.0-0.1",
+            "n": 55,
+            "predicted": 0.075,
+            "observed": 0.073
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 392,
+            "predicted": 0.162,
+            "observed": 0.179
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 1201,
+            "predicted": 0.252,
+            "observed": 0.244
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 536,
+            "predicted": 0.343,
+            "observed": 0.341
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 360,
+            "predicted": 0.451,
+            "observed": 0.461
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 260,
+            "predicted": 0.542,
+            "observed": 0.55
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 147,
+            "predicted": 0.643,
+            "observed": 0.667
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 57,
+            "predicted": 0.738,
+            "observed": 0.649
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 14,
+            "predicted": 0.84,
+            "observed": 0.857
+          },
+          {
+            "bin": "0.9-1.0",
+            "n": 2,
+            "predicted": 0.912,
+            "observed": 1.0
+          }
+        ],
+        "market_1x2_closing": {
+          "matches": 1008,
+          "logloss": 0.9786,
+          "brier": 0.5834,
+          "model_logloss_same_matches": 1.003,
+          "top_pick_hit_rate": 0.5347
+        },
+        "model_ou25": {
+          "logloss": 0.6891,
+          "brier": 0.495,
+          "ece": 0.0377
+        },
+        "market_ou25_closing": {
+          "logloss": 0.67,
+          "model_logloss_same_matches": 0.6891
+        },
+        "model_btts": {
+          "logloss": 0.6949,
+          "baseline_logloss": 0.6895,
+          "ece": 0.0316
+        },
+        "correct_score": {
+          "hit_rate": 0.1131,
+          "mean_predicted_probability": 0.1229
+        },
+        "value_bets_pre_match_avg_odds": [
+          {
+            "edge_min": 0.03,
+            "bets": 784,
+            "wins": 275,
+            "roi": -0.1508,
+            "roi_95_halfwidth": 0.0809
+          },
+          {
+            "edge_min": 0.05,
+            "bets": 689,
+            "wins": 242,
+            "roi": -0.1279,
+            "roi_95_halfwidth": 0.0885
+          },
+          {
+            "edge_min": 0.08,
+            "bets": 568,
+            "wins": 187,
+            "roi": -0.1507,
+            "roi_95_halfwidth": 0.0997
+          },
+          {
+            "edge_min": 0.1,
+            "bets": 496,
+            "wins": 157,
+            "roi": -0.1741,
+            "roi_95_halfwidth": 0.1068
+          }
+        ]
+      },
+      "xi=0.0019,blend=0.7": {
+        "matches": 1008,
+        "model_1x2": {
+          "logloss": 0.9846,
+          "brier": 0.5872,
+          "ece": 0.0114,
+          "top_pick_hit_rate": 0.5308
+        },
+        "calibration_1x2": [
+          {
+            "bin": "0.0-0.1",
+            "n": 49,
+            "predicted": 0.078,
+            "observed": 0.061
+          },
+          {
+            "bin": "0.1-0.2",
+            "n": 389,
+            "predicted": 0.16,
+            "observed": 0.134
+          },
+          {
+            "bin": "0.2-0.3",
+            "n": 1298,
+            "predicted": 0.254,
+            "observed": 0.251
+          },
+          {
+            "bin": "0.3-0.4",
+            "n": 437,
+            "predicted": 0.349,
+            "observed": 0.364
+          },
+          {
+            "bin": "0.4-0.5",
+            "n": 366,
+            "predicted": 0.45,
+            "observed": 0.448
+          },
+          {
+            "bin": "0.5-0.6",
+            "n": 264,
+            "predicted": 0.547,
+            "observed": 0.561
+          },
+          {
+            "bin": "0.6-0.7",
+            "n": 153,
+            "predicted": 0.648,
+            "observed": 0.686
+          },
+          {
+            "bin": "0.7-0.8",
+            "n": 54,
+            "predicted": 0.739,
+            "observed": 0.704
+          },
+          {
+            "bin": "0.8-0.9",
+            "n": 14,
+            "predicted": 0.839,
+            "observed": 0.929
+          }
+        ],
+        "market_1x2_closing": {
+          "matches": 1008,
+          "logloss": 0.9786,
+          "brier": 0.5834,
+          "model_logloss_same_matches": 0.9846,
+          "top_pick_hit_rate": 0.5347
+        },
+        "model_ou25": {
+          "logloss": 0.677,
+          "brier": 0.4841,
+          "ece": 0.0059
+        },
+        "market_ou25_closing": {
+          "logloss": 0.67,
+          "model_logloss_same_matches": 0.677
+        },
+        "model_btts": {
+          "logloss": 0.6875,
+          "baseline_logloss": 0.6895,
+          "ece": 0.0149
+        },
+        "correct_score": {
+          "hit_rate": 0.1131,
+          "mean_predicted_probability": 0.121
+        },
+        "value_bets_pre_match_avg_odds": [
+          {
+            "edge_min": 0.03,
+            "bets": 210,
+            "wins": 57,
+            "roi": -0.2003,
+            "roi_95_halfwidth": 0.1772
+          },
+          {
+            "edge_min": 0.05,
+            "bets": 110,
+            "wins": 26,
+            "roi": -0.2664,
+            "roi_95_halfwidth": 0.2464
+          },
+          {
+            "edge_min": 0.08,
+            "bets": 33,
+            "wins": 8,
+            "roi": -0.1473,
+            "roi_95_halfwidth": 0.5143
+          },
+          {
+            "edge_min": 0.1,
+            "bets": 17,
+            "wins": 3,
+            "roi": -0.3512,
+            "roi_95_halfwidth": 0.6663
+          }
+        ]
+      }
+    }
+  }
+}

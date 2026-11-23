@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/* Winala tokens. Dark is the default scene (evening matches, phone in hand);
+   light follows the system setting for daylight use outdoors. */
+:root {
+  color-scheme: dark;
+  --bg: #0c0e12;
+  --surface: #15181e;
+  --surface-2: #1c2027;
+  --surface-3: #262b34;
+  --line: #2a2f38;
+  --text: #edf0f3;
+  --text-2: #a3acb8;
+  --text-3: #808996;
+  --accent: #ffb224;
+  --accent-press: #f0a00a;
+  --accent-ink: #ffb224;
+  --on-accent: #1a1200;
+  --home: #4b9bff;
+  --draw: #9aa4b2;
+  --away: #ff6e5a;
+  --good: #34c77b;
+  --warn: #ffb224;
+  --bad: #ff6e5a;
+  --focus: #ffd27a;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f2f3f5;
+    --surface: #ffffff;
+    --surface-2: #f1f3f6;
+    --surface-3: #e5e8ed;
+    --line: #dfe3e9;
+    --text: #0e1116;
+    --text-2: #4b5563;
+    --text-3: #626b78;
+    --accent: #ffb224;
+    --accent-press: #f0a00a;
+    --accent-ink: #8f5200;
+    --on-accent: #1a1200;
+    --home: #1f6fe0;
+    --draw: #6f7a8a;
+    --away: #dc4128;
+    --good: #12824a;
+    --warn: #a86400;
+    --bad: #c9361f;
+    --focus: #1f6fe0;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-accent: var(--accent);
+  --color-accent-press: var(--accent-press);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+  --color-home: var(--home);
+  --color-draw: var(--draw);
+  --color-away: var(--away);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --radius-card: 14px;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
+  caret-color: var(--accent);
+}
+
+a {
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) transparent;
+}
+
+/* Condensed display voice: same variable face, narrower width axis. */
+.font-display {
+  font-stretch: 78%;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.font-wide {
+  font-stretch: 118%;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bar-grow {
+    transform-origin: left center;
+    animation: bar-grow 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .reveal {
+    animation: reveal 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0.04);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0.001;
+    filter: blur(6px);
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}

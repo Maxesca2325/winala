@@ -10,9 +10,11 @@ import requests
 
 class Backend:
     def __init__(self) -> None:
-        self.url = os.environ["SUPABASE_URL"].rstrip("/")
-        self.anon = os.environ["SUPABASE_ANON_KEY"]
-        self.secret = os.environ["INGEST_SECRET"]
+        # .strip(): a copy-pasted GitHub secret often carries a trailing newline,
+        # which both breaks the HTTP header and fails the server-side comparison.
+        self.url = os.environ["SUPABASE_URL"].strip().rstrip("/")
+        self.anon = os.environ["SUPABASE_ANON_KEY"].strip()
+        self.secret = os.environ["INGEST_SECRET"].strip()
 
     def _post(self, path: str, body: dict, headers: dict) -> dict:
         last = None

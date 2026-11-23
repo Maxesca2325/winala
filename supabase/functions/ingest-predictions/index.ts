@@ -23,7 +23,7 @@ const TYPES = ["STANDARD", "DEEP"];
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json(405, { error: "method_not_allowed" });
   const secret = req.headers.get("x-ingest-secret") ?? "";
-  if (!timingSafeEqual(secret, requireEnv("INGEST_SECRET"))) return json(401, { error: "unauthorized" });
+  if (!timingSafeEqual(secret, requireEnv("INGEST_SECRET").trim())) return json(401, { error: "unauthorized" });
 
   let body: Record<string, unknown>;
   try {

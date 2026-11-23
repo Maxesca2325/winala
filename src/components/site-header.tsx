@@ -1,15 +1,13 @@
 import Link from "next/link";
 import { Logo } from "./logo";
 import { LIVE } from "@/lib/live";
-import { HeaderCta } from "./header-cta";
+import { BrandLink, HeaderCta } from "./header-cta";
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-line/70 bg-bg/90 backdrop-blur-md supports-[backdrop-filter]:bg-bg/75">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
-        <Link href="/" aria-label="Winala, accueil" className="rounded-md">
-          <Logo size={26} />
-        </Link>
+        <BrandLink size={26} />
         <nav className="flex items-center gap-1 text-sm">
           <Link href="/tracker" className="rounded-lg px-3 py-2 text-text-2 hover:text-text">
             Historique

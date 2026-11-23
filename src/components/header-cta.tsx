@@ -2,7 +2,19 @@
 
 import Link from "next/link";
 import { Coins } from "lucide-react";
+import { Logo } from "./logo";
 import { LIVE, useAuth } from "@/lib/backend";
+
+/** Logo links to the app (your matches) when signed in, to the landing otherwise. */
+export function BrandLink({ size = 26 }: { size?: number }) {
+  const { session } = useAuth();
+  const href = LIVE && session ? "/app" : "/";
+  return (
+    <Link href={href} aria-label="Winala, accueil" className="rounded-md">
+      <Logo size={size} />
+    </Link>
+  );
+}
 
 /** Right-side header action that reflects the login state, so the public
  * pages (landing, tracker) don't look "logged out" when you actually are in. */

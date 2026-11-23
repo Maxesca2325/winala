@@ -22,6 +22,41 @@ function isLight(hex: string) {
 
 export function Crest({ team, size = 32 }: { team: Team; size?: number }) {
   const light = isLight(team.color);
+  // Real crest when we have one (API-Football), colored initials otherwise.
+  if (team.logo) {
+    return (
+      <span
+        aria-hidden="true"
+        className="inline-grid shrink-0 place-items-center overflow-hidden rounded-full bg-white/5"
+        style={{ width: size, height: size }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={team.logo}
+          alt=""
+          width={Math.round(size * 0.86)}
+          height={Math.round(size * 0.86)}
+          loading="lazy"
+          decoding="async"
+          style={{ objectFit: "contain" }}
+          onError={(e) => {
+            // Fall back to initials if the image fails to load.
+            const el = e.currentTarget;
+            el.style.display = "none";
+            const parent = el.parentElement;
+            if (parent) {
+              parent.style.background = team.color;
+              parent.textContent = team.short;
+              parent.className = `inline-grid shrink-0 place-items-center rounded-full font-bold ${
+                isLight(team.color) ? "text-black/80" : "text-white"
+              }`;
+              parent.setAttribute("style", `width:${size}px;height:${size}px;font-size:${size * 0.3}px;font-stretch:80%;background:${team.color}`);
+            }
+          }}
+        />
+      </span>
+    );
+  }
   return (
     <span
       aria-hidden="true"

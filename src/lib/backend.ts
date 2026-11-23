@@ -4,6 +4,7 @@ import { createClient, type Session, type SupabaseClient } from "@supabase/supab
 import { useEffect, useSyncExternalStore } from "react";
 import type { Team } from "./demo-data";
 import type { ModelOutput } from "./model";
+import logos from "./team-logos.json";
 
 /**
  * Live mode: the browser talks to Supabase with the PUBLISHABLE key only.
@@ -106,13 +107,49 @@ export interface Analysis {
   balance?: number;
 }
 
+
+// Real crests from API-Football (static map, src/lib/team-logos.json). Names
+// are matched loosely so football-data spellings still resolve.
+const LOGO_BY_NORM: Record<string, string> = (() => {
+  const strip = (x: string) =>
+    x
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/\b(fc|cf|afc|sc|ac|as|ss|us|rc|cd|ud|club|calcio|association|football)\b/g, " ")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim()
+      .replace(/\s+/g, " ");
+  const out: Record<string, string> = {};
+  for (const [name, url] of Object.entries(logos as Record<string, string>)) out[strip(name)] = url;
+  return out;
+})();
+
+function logoFor(name: string): string | undefined {
+  const strip = (x: string) =>
+    x
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/\b(fc|cf|afc|sc|ac|as|ss|us|rc|cd|ud|club|calcio|association|football)\b/g, " ")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim()
+      .replace(/\s+/g, " ");
+  const k = strip(name);
+  if (LOGO_BY_NORM[k]) return LOGO_BY_NORM[k];
+  for (const lk of Object.keys(LOGO_BY_NORM)) {
+    if (k && (k === lk || k.includes(lk) || lk.includes(k)) && Math.abs(k.length - lk.length) <= 4) return LOGO_BY_NORM[lk];
+  }
+  return undefined;
+}
+
 const PALETTE = ["#2f6fdf", "#c8102e", "#0f8a5f", "#7a3fd1", "#d9730d", "#0e7c86", "#b5179e", "#4d5b70", "#a4161a", "#1b6e3a"];
 export function teamFromName(name: string): Team {
   let h = 0;
   for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   const words = name.replace(/[^A-Za-zÀ-ÿ ]/g, "").split(/\s+/).filter(Boolean);
   const short = (words.length > 1 ? words.map((w) => w[0]).join("") : name).slice(0, 3).toUpperCase();
-  return { name, short, color: PALETTE[h % PALETTE.length] };
+  return { name, short, color: PALETTE[h % PALETTE.length], logo: logoFor(name) };
 }
 
 const HAITI_TZ = "America/Port-au-Prince";

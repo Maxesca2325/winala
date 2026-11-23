@@ -21,6 +21,7 @@ export interface Team {
   name: string;
   short: string;
   color: string;
+  logo?: string;
 }
 
 export interface DemoMatch {

@@ -23,7 +23,7 @@ export default function Home() {
               Les chances du match, <span className="text-accent-ink">calculées.</span> Pas devinées.
             </h1>
             <p className="mt-5 max-w-[34rem] text-lg leading-relaxed text-text-2">
-              Winala passe les matchs des grands championnats d'Europe dans un modèle statistique. Tu vois la probabilité de chaque
+              Winala passe les matchs des grands championnats d&apos;Europe dans un modèle statistique. Tu vois la probabilité de chaque
               issue, le nombre de buts (plus/moins 1,5 – 2,5 – 3,5), la double chance, le score exact et le niveau de risque.
             </p>
             <div id="liste" className="mt-7 max-w-[34rem] scroll-mt-24">

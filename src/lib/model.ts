@@ -46,6 +46,69 @@ export function pct(x: number) {
   return `${Math.round(x * 100)} %`;
 }
 
+export type RecoTier = "fort" | "solide" | "leger";
+export interface Reco {
+  label: string;
+  prob: number;
+  tier: RecoTier;
+}
+
+const tierOf = (p: number): RecoTier => (p >= 0.75 ? "fort" : p >= 0.65 ? "solide" : "leger");
+
+/**
+ * Turns the model's numbers into actionable advice: the markets worth a bet,
+ * ranked by confidence. Only signals clearly above a coin flip make the list;
+ * a genuinely even match returns [] on purpose (we say so rather than pretend).
+ */
+export function recommendations(m: ModelOutput, home: string, away: string): Reco[] {
+  const mk = m.markets;
+  const p = m.probabilities;
+  const out: Reco[] = [];
+
+  // Result: prefer the safer double chance when we have it.
+  if (mk.double_chance) {
+    const dc = mk.double_chance;
+    const opts: [string, number][] = [
+      [`${home} ou nul`, dc["1X"]],
+      [`${home} ou ${away}`, dc["12"]],
+      [`nul ou ${away}`, dc["X2"]],
+    ];
+    const [lab, pr] = opts.reduce((a, b) => (b[1] > a[1] ? b : a));
+    out.push({ label: `Double chance : ${lab}`, prob: pr, tier: tierOf(pr) });
+  } else {
+    const top = Math.max(p.home, p.draw, p.away);
+    const lab = p.home === top ? `Victoire ${home}` : p.away === top ? `Victoire ${away}` : "Match nul";
+    out.push({ label: lab, prob: top, tier: tierOf(top) });
+  }
+
+  // Goals: the single most confident over/under line.
+  const lines: [string, { over?: number; prediction: "Over" | "Under"; confidence: number } | undefined][] = [
+    ["1,5", mk.over_under_1_5],
+    ["2,5", mk.over_under_2_5],
+    ["3,5", mk.over_under_3_5],
+  ];
+  const goals: [string, number][] = [];
+  for (const [line, v] of lines) {
+    if (!v) continue;
+    const over = v.over ?? (v.prediction === "Over" ? v.confidence : 1 - v.confidence);
+    goals.push([`Plus de ${line} buts`, over], [`Moins de ${line} buts`, 1 - over]);
+  }
+  if (goals.length) {
+    const [lab, pr] = goals.reduce((a, b) => (b[1] > a[1] ? b : a));
+    out.push({ label: lab, prob: pr, tier: tierOf(pr) });
+  }
+
+  // Both teams to score.
+  out.push({
+    label: mk.btts.prediction === "Oui" ? "Les deux équipes marquent" : "Une équipe ne marque pas",
+    prob: mk.btts.confidence,
+    tier: tierOf(mk.btts.confidence),
+  });
+
+  // Keep only what clearly beats a coin flip; strongest first, max 3.
+  return out.filter((r) => r.prob >= 0.6).sort((a, b) => b.prob - a.prob).slice(0, 3);
+}
+
 export function odds(x: number) {
   return x.toFixed(2).replace(".", ",");
 }

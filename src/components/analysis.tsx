@@ -1,6 +1,6 @@
-import { Lock, ShieldAlert, TrendingUp, UsersRound } from "lucide-react";
+import { Lock, Scale, ShieldAlert, Target, TrendingUp, UsersRound } from "lucide-react";
 import { buildArguments } from "@/lib/arguments";
-import { confidenceOf, odds, pct, type Confidence, type ModelOutput } from "@/lib/model";
+import { confidenceOf, odds, pct, recommendations, type Confidence, type ModelOutput, type Reco } from "@/lib/model";
 import type { Team } from "@/lib/demo-data";
 
 export function ExampleTag({ className = "" }: { className?: string }) {
@@ -164,6 +164,62 @@ function MarketRow({ label, pick, value }: { label: string; pick: string; value:
 
 const riskColor = { Faible: "text-good", Moyen: "text-warn", Élevé: "text-bad" } as const;
 
+const tierStyle = {
+  fort: { label: "Signal fort", dot: "bg-good", text: "text-good" },
+  solide: { label: "Solide", dot: "bg-warn", text: "text-warn" },
+  leger: { label: "Léger", dot: "bg-text-3", text: "text-text-2" },
+} as const;
+
+
+function RecoCard({ recos, demo }: { recos: Reco[]; demo: boolean }) {
+  if (recos.length === 0) {
+    return (
+      <section className="rounded-card border border-line bg-surface p-4">
+        <div className="mb-1 flex items-center justify-between">
+          <h3 className="flex items-center gap-2 font-semibold">
+            <Scale size={18} className="text-text-2" aria-hidden="true" />
+            Match trop serré
+          </h3>
+          {demo && <ExampleTag />}
+        </div>
+        <p className="text-sm text-text-2">
+          Aucun pari ne se détache : les probabilités sont trop proches de 50/50. Rien de sûr ici — mieux vaut passer ton tour ou miser
+          petit.
+        </p>
+      </section>
+    );
+  }
+  return (
+    <section className="rounded-card border border-accent/50 bg-accent/[0.07] p-4">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="flex items-center gap-2 font-semibold">
+          <Target size={18} className="text-accent-ink" aria-hidden="true" />
+          À miser · nos recommandations
+        </h3>
+        {demo && <ExampleTag />}
+      </div>
+      <ol className="space-y-2">
+        {recos.map((r, i) => {
+          const t = tierStyle[r.tier];
+          return (
+            <li key={i} className="flex items-center gap-3 rounded-lg bg-surface p-3">
+              <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${t.dot}`} aria-hidden="true" />
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold leading-tight">{r.label}</div>
+                <div className={`text-xs font-semibold ${t.text}`}>{t.label}</div>
+              </div>
+              <div className="font-display text-2xl">{Math.round(r.prob * 100)}%</div>
+            </li>
+          );
+        })}
+      </ol>
+      <p className="mt-3 text-xs text-text-2">
+        Classé par confiance du modèle. Plus le pourcentage est haut, plus l&apos;issue est probable — jamais garantie.
+      </p>
+    </section>
+  );
+}
+
 export function AnalysisView({
   prediction,
   home,
@@ -190,9 +246,12 @@ export function AnalysisView({
       ? prediction.key_arguments
       : buildArguments(prediction, home.name, away.name, { valueBetAllowed: vbAllowed });
   const vb = prediction.value_bet;
+  const recos = recommendations(prediction, home.name, away.name);
 
   return (
     <div className="reveal space-y-3">
+      <RecoCard recos={recos} demo={demo} />
+
       <section className="rounded-card border border-line bg-surface p-4">
         <div className="mb-4 flex items-center justify-between gap-2">
           <h3 className="text-sm font-semibold text-text-2">Probabilités 1X2</h3>

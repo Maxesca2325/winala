@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Logo } from "./logo";
 import { LIVE } from "@/lib/live";
+import { HeaderCta } from "./header-cta";
 
 export function SiteHeader() {
   return (
@@ -16,15 +17,7 @@ export function SiteHeader() {
           <Link href="/app" className="hidden rounded-lg px-3 py-2 text-text-2 hover:text-text sm:inline-block">
             {LIVE ? "Matchs" : "Démo"}
           </Link>
-          {LIVE ? (
-            <Link href="/connexion" className="rounded-lg bg-surface-2 px-3 py-2 font-semibold hover:bg-surface-3">
-              Connexion
-            </Link>
-          ) : (
-            <a href="#liste" className="rounded-lg bg-surface-2 px-3 py-2 font-semibold hover:bg-surface-3">
-              Rejoindre
-            </a>
-          )}
+          <HeaderCta />
         </nav>
       </div>
     </header>

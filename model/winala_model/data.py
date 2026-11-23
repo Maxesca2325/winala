@@ -30,9 +30,21 @@ class League:
 
 LEAGUES = [
     League("pl", "E0", "Premier League"),
-    League("liga", "SP1", "La Liga"),
+    League("championship", "E1", "Championship"),
+    League("scotland", "SC0", "Scottish Premiership"),
+    League("bundesliga", "D1", "Bundesliga"),
+    League("bundesliga2", "D2", "2. Bundesliga"),
     League("seriea", "I1", "Serie A"),
+    League("serieb", "I2", "Serie B"),
+    League("liga", "SP1", "La Liga"),
+    League("liga2", "SP2", "La Liga 2"),
     League("l1", "F1", "Ligue 1"),
+    League("l2", "F2", "Ligue 2"),
+    League("eredivisie", "N1", "Eredivisie"),
+    League("jupiler", "B1", "Pro League"),
+    League("liga-pt", "P1", "Primeira Liga"),
+    League("super-lig", "T1", "Süper Lig"),
+    League("super-league-gr", "G1", "Super League"),
 ]
 LEAGUE_BY_DIV = {lg.div: lg for lg in LEAGUES}
 

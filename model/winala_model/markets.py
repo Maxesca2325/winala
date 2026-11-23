@@ -16,7 +16,10 @@ def markets_from_matrix(m: np.ndarray) -> dict:
     draw = float(np.trace(m))
     away = float(m[i < j].sum())
     btts = float(m[(i >= 1) & (j >= 1)].sum())
-    over25 = float(m[(i + j) >= 3].sum())
+    total = i + j
+    over15 = float(m[total >= 2].sum())
+    over25 = float(m[total >= 3].sum())
+    over35 = float(m[total >= 4].sum())
     flat = [(float(m[a, b]), a, b) for a in range(n) for b in range(n)]
     flat.sort(reverse=True)
     top_scores = [{"score": f"{a}-{b}", "probability": round(p, 4)} for p, a, b in flat[:5]]
@@ -25,7 +28,9 @@ def markets_from_matrix(m: np.ndarray) -> dict:
         "draw": draw,
         "away": away,
         "btts": btts,
+        "over15": over15,
         "over25": over25,
+        "over35": over35,
         "top_scores": top_scores,
         "exp_home": float((m.sum(axis=1) * np.arange(n)).sum()),
         "exp_away": float((m.sum(axis=0) * np.arange(n)).sum()),
@@ -84,6 +89,16 @@ def model_output(match_id: str, home: str, away: str, mk: dict, vb: dict | None)
     top = max(("home", "draw", "away"), key=lambda k: probs[k])
     top_pick = {"home": f"Victoire {home}", "draw": "Match nul", "away": f"Victoire {away}"}[top]
     cs = mk["top_scores"][0]
+
+    def ou(p: float) -> dict:
+        return {"prediction": "Over" if p >= 0.5 else "Under", "confidence": round(max(p, 1 - p), 4), "over": round(p, 4)}
+
+    # Double chance: the two outcomes that each bet covers.
+    dc = {
+        "1X": round(probs["home"] + probs["draw"], 4),  # home or draw
+        "12": round(probs["home"] + probs["away"], 4),  # home or away (no draw)
+        "X2": round(probs["draw"] + probs["away"], 4),  # draw or away
+    }
     return {
         "match_id": match_id,
         "probabilities": probs,
@@ -93,10 +108,10 @@ def model_output(match_id: str, home: str, away: str, mk: dict, vb: dict | None)
                 "prediction": "Oui" if mk["btts"] >= 0.5 else "Non",
                 "confidence": round(max(mk["btts"], 1 - mk["btts"]), 4),
             },
-            "over_under_2_5": {
-                "prediction": "Over" if mk["over25"] >= 0.5 else "Under",
-                "confidence": round(max(mk["over25"], 1 - mk["over25"]), 4),
-            },
+            "over_under_1_5": ou(mk["over15"]),
+            "over_under_2_5": ou(mk["over25"]),
+            "over_under_3_5": ou(mk["over35"]),
+            "double_chance": dc,
             "correct_score": {"prediction": cs["score"], "confidence": cs["probability"]},
             "top_scores": mk["top_scores"],
         },

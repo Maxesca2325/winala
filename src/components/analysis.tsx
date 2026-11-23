@@ -189,7 +189,6 @@ export function AnalysisView({
     prediction.key_arguments.length === 3
       ? prediction.key_arguments
       : buildArguments(prediction, home.name, away.name, { valueBetAllowed: vbAllowed });
-  const ou = prediction.markets.over_under_2_5;
   const vb = prediction.value_bet;
 
   return (
@@ -211,16 +210,31 @@ export function AnalysisView({
         )}
       </section>
 
+      <section className="rounded-card border border-line bg-surface p-4">
+        <h3 className="mb-1 text-sm font-semibold text-text-2">Nombre de buts</h3>
+        <div className="divide-y divide-line">
+          {([
+            ["1,5", prediction.markets.over_under_1_5],
+            ["2,5", prediction.markets.over_under_2_5],
+            ["3,5", prediction.markets.over_under_3_5],
+          ] as const)
+            .filter(([, v]) => v)
+            .map(([line, v]) => (
+              <MarketRow
+                key={line}
+                label={`Plus / Moins de ${line}`}
+                pick={v!.prediction === "Over" ? `Plus de ${line}` : `Moins de ${line}`}
+                value={v!.confidence}
+              />
+            ))}
+        </div>
+      </section>
+
       <section className="rounded-card border border-line bg-surface px-4 py-2 divide-y divide-line">
         <MarketRow
           label="Les deux équipes marquent"
           pick={prediction.markets.btts.prediction}
           value={prediction.markets.btts.confidence}
-        />
-        <MarketRow
-          label="Buts dans le match"
-          pick={ou.prediction === "Over" ? "Plus de 2,5" : "Moins de 2,5"}
-          value={ou.confidence}
         />
         <div className="flex items-center justify-between py-2.5">
           <span className="text-sm text-text-2">Niveau de risque</span>
@@ -230,6 +244,29 @@ export function AnalysisView({
           </span>
         </div>
       </section>
+
+      {prediction.markets.double_chance && (
+        <section className="rounded-card border border-line bg-surface p-4">
+          <h3 className="mb-3 text-sm font-semibold text-text-2">Double chance</h3>
+          <dl className="grid grid-cols-3 gap-2 text-center">
+            {([
+              ["1X", `${home.short} ou nul`],
+              ["12", "Pas de nul"],
+              ["X2", `Nul ou ${away.short}`],
+            ] as const).map(([k, label]) => {
+              const v = prediction.markets.double_chance![k];
+              const best = v === Math.max(prediction.markets.double_chance!["1X"], prediction.markets.double_chance!["12"], prediction.markets.double_chance!["X2"]);
+              return (
+                <div key={k} className={`rounded-lg p-2 ${best ? "bg-accent/[0.1]" : "bg-surface-2"}`}>
+                  <dt className="truncate text-[0.7rem] text-text-2">{label}</dt>
+                  <dd className={`font-display text-2xl ${best ? "text-accent-ink" : ""}`}>{Math.round(v * 100)}%</dd>
+                </div>
+              );
+            })}
+          </dl>
+          <p className="mt-2 text-xs text-text-3">Une double chance couvre deux issues sur trois : plus sûr, mais cote plus basse.</p>
+        </section>
+      )}
 
       {prediction.markets.top_scores && prediction.markets.top_scores.length > 0 && (
         <section className="rounded-card border border-line bg-surface p-4">

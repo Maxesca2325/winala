@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s · Winala",
   },
   description:
-    "Analyses statistiques des matchs de Premier League, Liga, Serie A et Ligue 1 pour Haïti. Probabilités 1X2, BTTS, plus/moins 2,5 buts. Historique public, prix en HTG.",
+    "Analyses statistiques des grands championnats d'Europe pour Haïti. Probabilités 1X2, double chance, plus/moins de buts, score exact. Historique public, prix en HTG.",
   applicationName: "Winala",
   // Static file with relative URLs: works at the domain root and under a sub-path.
   manifest: `${BASE_PATH}/manifest.webmanifest`,

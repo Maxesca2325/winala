@@ -12,7 +12,11 @@ export interface ModelOutput {
   top_pick: string;
   markets: {
     btts: { prediction: "Oui" | "Non"; confidence: number };
-    over_under_2_5: { prediction: "Over" | "Under"; confidence: number };
+    over_under_2_5: { prediction: "Over" | "Under"; confidence: number; over?: number };
+    over_under_1_5?: { prediction: "Over" | "Under"; confidence: number; over?: number };
+    over_under_3_5?: { prediction: "Over" | "Under"; confidence: number; over?: number };
+    /** Double chance: P(1X), P(12), P(X2). */
+    double_chance?: { "1X": number; "12": number; "X2": number };
     /** Most likely exact score and its probability. */
     correct_score?: { prediction: string; confidence: number };
     top_scores?: { score: string; probability: number }[];

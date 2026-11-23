@@ -39,11 +39,22 @@ export interface DemoMatch {
 }
 
 export const LEAGUES: League[] = [
-  { id: "pl", name: "Premier League", short: "PL", country: "Angleterre", calibrated: true },
-  { id: "liga", name: "La Liga", short: "Liga", country: "Espagne", calibrated: true },
-  { id: "seriea", name: "Serie A", short: "Serie A", country: "Italie", calibrated: true },
-  { id: "l1", name: "Ligue 1", short: "L1", country: "France", calibrated: true },
-  { id: "ucl", name: "Ligue des Champions", short: "LdC", country: "Europe", calibrated: false },
+  { id: "pl", name: "Premier League", short: "Premier League", country: "Angleterre", calibrated: false },
+  { id: "championship", name: "Championship", short: "Championship", country: "Angleterre", calibrated: false },
+  { id: "scotland", name: "Écosse Premiership", short: "Écosse", country: "Écosse", calibrated: false },
+  { id: "bundesliga", name: "Bundesliga", short: "Bundesliga", country: "Allemagne", calibrated: false },
+  { id: "bundesliga2", name: "2. Bundesliga", short: "Bundesliga 2", country: "Allemagne", calibrated: false },
+  { id: "seriea", name: "Serie A", short: "Serie A", country: "Italie", calibrated: false },
+  { id: "serieb", name: "Serie B", short: "Serie B", country: "Italie", calibrated: false },
+  { id: "liga", name: "La Liga", short: "La Liga", country: "Espagne", calibrated: false },
+  { id: "liga2", name: "La Liga 2", short: "La Liga 2", country: "Espagne", calibrated: false },
+  { id: "l1", name: "Ligue 1", short: "Ligue 1", country: "France", calibrated: false },
+  { id: "l2", name: "Ligue 2", short: "Ligue 2", country: "France", calibrated: false },
+  { id: "eredivisie", name: "Eredivisie", short: "Eredivisie", country: "Pays-Bas", calibrated: false },
+  { id: "jupiler", name: "Pro League", short: "Belgique", country: "Belgique", calibrated: false },
+  { id: "liga-pt", name: "Primeira Liga", short: "Portugal", country: "Portugal", calibrated: false },
+  { id: "super-lig", name: "Süper Lig", short: "Turquie", country: "Turquie", calibrated: false },
+  { id: "super-league-gr", name: "Super League", short: "Grèce", country: "Grèce", calibrated: false },
 ];
 
 export const leagueById = (id: string) => LEAGUES.find((l) => l.id === id)!;

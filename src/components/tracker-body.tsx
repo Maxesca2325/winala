@@ -1,28 +1,82 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Check, Clock3, Minus, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Check, Clock3, Lock, Minus, X } from "lucide-react";
 import { LIVE, sb } from "@/lib/backend";
 import { summarize } from "@/lib/tracker-summary";
 import type { TrackerRow } from "@/lib/tracker-types";
 
 const MARKETS = ["Tous", "1X2", "Plus/Moins 2,5", "BTTS", "Score exact"] as const;
+const MARKET_ORDER = ["1X2", "Plus/Moins 2,5", "BTTS", "Score exact"];
+const label = (m: string) => (m === "BTTS" ? "Les deux marquent" : m);
+const pickLabel = (p: string | null) => (p === "Over" ? "Plus de 2,5" : p === "Under" ? "Moins de 2,5" : p);
+
+const fmt = new Intl.DateTimeFormat("fr-HT", {
+  timeZone: "America/Port-au-Prince",
+  day: "2-digit",
+  month: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+interface Group {
+  match_id: string;
+  home: string;
+  away: string;
+  league: string;
+  kickoff: string;
+  published: string;
+  commitment: string;
+  played: boolean;
+  rows: TrackerRow[];
+}
+
+const SEALED_SHOWN = 20;
 
 export function TrackerBody() {
   const [rows, setRows] = useState<TrackerRow[] | null>(LIVE ? null : []);
   const [market, setMarket] = useState<(typeof MARKETS)[number]>("Tous");
+  const [now] = useState(() => Date.now());
 
   useEffect(() => {
     if (!LIVE) return;
     sb()
-      .rpc("get_public_tracker", { p_limit: 500 })
+      .rpc("get_public_tracker", { p_limit: 1000 })
       .then(({ data }) => setRows((data as TrackerRow[] | null) ?? []));
   }, []);
 
+  const groups = useMemo<Group[]>(() => {
+    if (!rows) return [];
+    const by = new Map<string, Group>();
+    for (const r of rows) {
+      if (market !== "Tous" && r.market !== market) continue;
+      let g = by.get(r.match_id);
+      if (!g) {
+        g = {
+          match_id: r.match_id,
+          home: r.home_team,
+          away: r.away_team,
+          league: r.league_name,
+          kickoff: r.kickoff_time,
+          published: r.published_at,
+          commitment: r.commitment,
+          played: new Date(r.kickoff_time).getTime() <= now,
+          rows: [],
+        };
+        by.set(r.match_id, g);
+      }
+      g.rows.push(r);
+    }
+    for (const g of by.values()) g.rows.sort((a, b) => MARKET_ORDER.indexOf(a.market) - MARKET_ORDER.indexOf(b.market));
+    return [...by.values()];
+  }, [rows, market, now]);
+
   if (rows === null) return <div className="mt-8 h-24 animate-pulse rounded-card bg-surface" aria-label="Chargement" />;
 
-  const shown = market === "Tous" ? rows : rows.filter((r) => r.market === market);
-  const s = summarize(shown);
+  const s = summarize(market === "Tous" ? rows : rows.filter((r) => r.market === market));
+  const played = groups.filter((g) => g.played).sort((a, b) => +new Date(b.kickoff) - +new Date(a.kickoff));
+  const sealed = groups.filter((g) => !g.played).sort((a, b) => +new Date(a.kickoff) - +new Date(b.kickoff));
+
   return (
     <>
       <div className="no-scrollbar -mx-4 mt-8 flex gap-2 overflow-x-auto px-4">
@@ -39,6 +93,7 @@ export function TrackerBody() {
           </button>
         ))}
       </div>
+
       <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-card border border-line bg-line sm:grid-cols-4">
         {[
           ["Réglés", String(s.settled)],
@@ -54,70 +109,108 @@ export function TrackerBody() {
       </dl>
       {s.brier !== null && <p className="mt-3 text-sm text-text-2">Score de Brier : {s.brier.toFixed(3).replace(".", ",")}</p>}
 
-      {shown.length === 0 ? (
+      {groups.length === 0 ? (
         <div className="mt-6 flex flex-col items-center gap-2 rounded-card border border-dashed border-line px-6 py-12 text-center">
           <Clock3 className="text-text-3" size={24} aria-hidden="true" />
           <p className="font-semibold">Aucun pronostic publié pour l&apos;instant.</p>
-          <p className="max-w-sm text-sm text-text-2">
-            On n&apos;affiche aucun chiffre tant qu&apos;il n&apos;y a pas de vrais pronostics publiés avant les matchs.
-          </p>
         </div>
       ) : (
-        <ul className="mt-6 divide-y divide-line overflow-hidden rounded-card border border-line bg-surface">
-          {shown.map((r) => (
-            <TrackerItem key={r.id} r={r} />
-          ))}
-        </ul>
+        <>
+          {played.length > 0 && (
+            <section className="mt-8">
+              <h2 className="mb-3 text-sm font-semibold text-text-2">Résultats</h2>
+              <div className="space-y-3">
+                {played.map((g) => (
+                  <PlayedCard key={g.match_id} g={g} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {sealed.length > 0 && (
+            <section className="mt-8">
+              <h2 className="mb-1 flex items-center gap-2 text-sm font-semibold text-text-2">
+                <Lock size={14} aria-hidden="true" /> Pronostics scellés · à venir
+              </h2>
+              <p className="mb-3 text-xs text-text-3">
+                Publiés et horodatés avant le coup d&apos;envoi. Les chiffres apparaissent, et le résultat, après le match.
+              </p>
+              <div className="space-y-2">
+                {sealed.slice(0, SEALED_SHOWN).map((g) => (
+                  <SealedCard key={g.match_id} g={g} />
+                ))}
+              </div>
+              {sealed.length > SEALED_SHOWN && (
+                <p className="mt-3 text-center text-sm text-text-3">+ {sealed.length - SEALED_SHOWN} autres matchs scellés à venir</p>
+              )}
+            </section>
+          )}
+        </>
       )}
     </>
   );
 }
 
-const fmt = new Intl.DateTimeFormat("fr-HT", {
-  timeZone: "America/Port-au-Prince",
-  day: "2-digit",
-  month: "short",
-  hour: "2-digit",
-  minute: "2-digit",
-});
+function resultIcon(result: TrackerRow["result"]) {
+  if (result === "WIN") return <Check className="text-good" size={16} aria-label="Gagné" />;
+  if (result === "LOSS") return <X className="text-bad" size={16} aria-label="Perdu" />;
+  if (result === "VOID") return <Minus className="text-text-3" size={16} aria-label="Annulé" />;
+  return <Clock3 className="text-text-3" size={16} aria-label="Résultat à venir" />;
+}
 
-const label = (m: string) => (m === "BTTS" ? "Les deux marquent" : m);
-
-function TrackerItem({ r }: { r: TrackerRow }) {
-  const icon =
-    r.result === "WIN" ? (
-      <Check className="text-good" size={18} aria-label="Gagné" />
-    ) : r.result === "LOSS" ? (
-      <X className="text-bad" size={18} aria-label="Perdu" />
-    ) : r.result === "VOID" ? (
-      <Minus className="text-text-3" size={18} aria-label="Annulé" />
-    ) : (
-      <Clock3 className="text-text-3" size={18} aria-label="En attente" />
-    );
-  const pick = r.predicted_pick === "Over" ? "Plus de 2,5" : r.predicted_pick === "Under" ? "Moins de 2,5" : r.predicted_pick;
+function PlayedCard({ g }: { g: Group }) {
   return (
-    <li className="flex items-start gap-3 px-4 py-3">
-      <span className="mt-1">{icon}</span>
-      <div className="min-w-0 flex-1">
+    <div className="overflow-hidden rounded-card border border-line bg-surface">
+      <div className="border-b border-line px-4 py-2.5">
         <div className="truncate font-semibold">
-          {r.home_team} – {r.away_team}
+          {g.home} – {g.away}
         </div>
-        {r.predicted_pick !== null && r.probability !== null ? (
-          <div className="text-sm text-text-2">
-            {label(r.market)} : {pick} · {Math.round(Number(r.probability) * 100)} %
-          </div>
-        ) : (
-          <div className="text-sm text-text-2">
-            {label(r.market)} : scellé avant le match · empreinte{" "}
-            <code className="font-mono text-xs" title={r.commitment}>
-              {r.commitment.slice(0, 10)}…
-            </code>
-          </div>
-        )}
-        <div className="mt-0.5 text-xs text-text-3">
-          {r.league_name} · publié le {fmt.format(new Date(r.published_at))}, coup d&apos;envoi {fmt.format(new Date(r.kickoff_time))}
+        <div className="text-xs text-text-3">
+          {g.league} · coup d&apos;envoi {fmt.format(new Date(g.kickoff))}
         </div>
       </div>
-    </li>
+      <ul className="divide-y divide-line">
+        {g.rows.map((r) => (
+          <li key={r.id} className="flex items-center gap-3 px-4 py-2.5 text-sm">
+            <span>{resultIcon(r.result)}</span>
+            <span className="flex-1 text-text-2">{label(r.market)}</span>
+            <span className="font-semibold">
+              {pickLabel(r.predicted_pick)}
+              {r.probability !== null && <span className="ml-1 font-normal text-text-3">{Math.round(Number(r.probability) * 100)} %</span>}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function SealedCard({ g }: { g: Group }) {
+  return (
+    <div className="rounded-card border border-line bg-surface px-4 py-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="truncate font-semibold">
+            {g.home} – {g.away}
+          </div>
+          <div className="text-xs text-text-3">
+            {g.league} · coup d&apos;envoi {fmt.format(new Date(g.kickoff))}
+          </div>
+        </div>
+        <span className="flex shrink-0 items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-xs font-semibold text-text-2">
+          <Lock size={11} aria-hidden="true" /> scellé
+        </span>
+      </div>
+      <div className="mt-2 flex flex-wrap items-center gap-1.5">
+        {g.rows.map((r) => (
+          <span key={r.id} className="rounded-md bg-surface-2 px-2 py-0.5 text-[0.7rem] font-semibold text-text-2">
+            {label(r.market)}
+          </span>
+        ))}
+        <code className="ml-auto font-mono text-[0.68rem] text-text-3" title={g.commitment}>
+          empreinte {g.commitment.slice(0, 8)}…
+        </code>
+      </div>
+    </div>
   );
 }

@@ -1,18 +1,14 @@
-"""Daily: settle the public track record after matches, and flag matches that
-never got played (→ automatic refund in the database).
+"""Daily: settle the public track record from SportScore results, and flag
+matches that were postponed or cancelled (→ automatic refund in the database).
 
-  .venv/bin/python settle.py       # needs SUPABASE_URL, SUPABASE_ANON_KEY, INGEST_SECRET
+  .venv/bin/python settle.py       # needs SUPABASE_URL, SUPABASE_ANON_KEY, INGEST_SECRET (+ RAPIDAPI_KEY in CI)
 """
 from __future__ import annotations
 
 import pandas as pd
 
-from winala_model import data
+from winala_model import sportscore
 from winala_model.client import Backend
-
-# football-data.co.uk adds results within a few days. If a match is still
-# missing a week after kickoff, treat it as postponed (credits are refunded).
-POSTPONED_AFTER = pd.Timedelta(days=7)
 
 
 def outcome(market: str, pick: str, home: str, away: str, hg: int, ag: int) -> str:
@@ -20,11 +16,9 @@ def outcome(market: str, pick: str, home: str, away: str, hg: int, ag: int) -> s
         actual = home if hg > ag else away if ag > hg else "Nul"
         return "WIN" if pick == actual else "LOSS"
     if market == "BTTS":
-        actual = "Oui" if hg > 0 and ag > 0 else "Non"
-        return "WIN" if pick == actual else "LOSS"
+        return "WIN" if pick == ("Oui" if hg > 0 and ag > 0 else "Non") else "LOSS"
     if market == "Plus/Moins 2,5":
-        actual = "Over" if hg + ag > 2.5 else "Under"
-        return "WIN" if pick == actual else "LOSS"
+        return "WIN" if pick == ("Over" if hg + ag > 2.5 else "Under") else "LOSS"
     if market == "Score exact":
         return "WIN" if pick == f"{hg}-{ag}" else "LOSS"
     raise ValueError(market)
@@ -34,37 +28,42 @@ def main() -> None:
     be = Backend()
     now = pd.Timestamp.now(tz="UTC")
     rows = be.rpc("get_public_tracker", {"p_limit": 500})
-    pending = [r for r in rows if r["result"] is None and pd.Timestamp(r["kickoff_time"]) < now - pd.Timedelta(hours=3)]
+    pending = [r for r in rows if r["result"] is None and pd.Timestamp(r["kickoff_time"]) < now - pd.Timedelta(hours=2)]
     if not pending:
         print("nothing to settle")
         return
 
-    results: dict[str, tuple[int, int]] = {}
-    season = data.season_codes(data.current_season_start(), data.current_season_start())[0]
-    for lg in data.LEAGUES:
-        df = data.load_season(lg.div, season, refresh=True)
-        df = df[df["FTHG"].notna() & df["kickoff"].notna()]
-        for _, r in df.iterrows():
-            results[data.match_id(lg.div, r["kickoff"], r["HomeTeam"], r["AwayTeam"])] = (int(r["FTHG"]), int(r["FTAG"]))
+    # Build event_id -> status/score from the current season of every league.
+    index: dict[int, dict] = {}
+    for lg in sportscore.LEAGUES:
+        try:
+            for sid in sportscore.recent_season_ids(lg.ss_id, n=1):
+                index.update(sportscore.status_index(sportscore.season_events(sid)))
+        except Exception as e:  # noqa: BLE001
+            print(f"! {lg.id}: {e}")
 
-    settled = finished = postponed = 0
-    done_matches: set[str] = set()
+    settled = finished = offed = 0
+    done: set[str] = set()
     for r in pending:
         mid = r["match_id"]
-        if mid in results:
-            hg, ag = results[mid]
-            res = outcome(r["market"], r["predicted_pick"], r["home_team"], r["away_team"], hg, ag)
-            be.ingest({"kind": "settle", "match_id": mid, "market": r["market"], "result": res})
+        if not mid.startswith("ss-"):
+            continue
+        ev = index.get(int(mid[3:]))
+        if not ev:
+            continue
+        if ev["score"]:
+            hg, ag = ev["score"]
+            be.ingest({"kind": "settle", "match_id": mid, "market": r["market"], "result": outcome(r["market"], r["predicted_pick"], r["home_team"], r["away_team"], hg, ag)})
             settled += 1
-            if mid not in done_matches:
+            if mid not in done:
                 be.ingest({"kind": "status", "match_id": mid, "status": "FINISHED"})
-                done_matches.add(mid)
+                done.add(mid)
                 finished += 1
-        elif pd.Timestamp(r["kickoff_time"]) < now - POSTPONED_AFTER and mid not in done_matches:
-            be.ingest({"kind": "status", "match_id": mid, "status": "POSTPONED"})
-            done_matches.add(mid)
-            postponed += 1
-    print(f"settled {settled} picks, {finished} matches finished, {postponed} postponed (refunded)")
+        elif ev["off"] and mid not in done:
+            be.ingest({"kind": "status", "match_id": mid, "status": ev["off"]})
+            done.add(mid)
+            offed += 1
+    print(f"settled {settled} picks, {finished} matches finished, {offed} postponed/cancelled (refunded)")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
 # Winala: publish predictions before matches and settle the public record after them.
-# Runs twice a day. Needs ONE repository secret: WINALA_INGEST_SECRET
-# (Settings → Secrets and variables → Actions). URL and key below are public.
+# Runs twice a day. Needs TWO repository secrets (Settings → Secrets → Actions):
+#   WINALA_INGEST_SECRET  — shared with the ingest Edge Function
+#   WINALA_RAPIDAPI_KEY   — SportScore (RapidAPI) key: fixtures, results, odds
+# URL and publishable key below are public.
 name: Winala daily model
 
 on:
@@ -24,6 +26,7 @@ jobs:
       SUPABASE_URL: https://mbufjulnnzggxosvhtvf.supabase.co
       SUPABASE_ANON_KEY: sb_publishable_NDKEQPiuAw4FgNgbNrvLEQ_PGwRVdom
       INGEST_SECRET: ${{ secrets.WINALA_INGEST_SECRET }}
+      RAPIDAPI_KEY: ${{ secrets.WINALA_RAPIDAPI_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
